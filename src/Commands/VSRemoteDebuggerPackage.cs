@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
+using Microsoft.VisualStudio.Shell.Interop;
 using VSRemoteDebugger.OptionsPage;
 using VSRemoteDebugger.OptionsPages;
 using Task = System.Threading.Tasks.Task;
@@ -30,6 +32,7 @@ namespace VSRemoteDebugger
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideOptionPage(typeof(RemoteOptionsPage), "VSRemoteDebugger", "Remote Machine Settings", 0, 0, true)]
     [ProvideOptionPage(typeof(LocalOptionsPage), "VSRemoteDebugger", "Local Machine Settings", 0, 0, true)]
+    [ProvideToolWindow(typeof(VSRemoteDebugger.Windows.SettingsToolWindow))]
     public sealed class VSRemoteDebuggerPackage : AsyncPackage
     {
         private RemoteOptionsPage RemotePage => (RemoteOptionsPage)GetDialogPage(typeof(RemoteOptionsPage));
@@ -67,8 +70,8 @@ namespace VSRemoteDebugger
             // Do any initialization that requires the UI thread after switching to the UI thread.
             await JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await RemoteDebugCommand.InitializeAsync(this).ConfigureAwait(false);
+            await VSRemoteDebugger.Windows.SettingsToolWindowCommand.InitializeAsync(this);
         }
-
         #endregion
     }
 }
