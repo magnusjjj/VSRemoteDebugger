@@ -1,6 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
+using TextBox = System.Windows.Controls.TextBox;
+using UserControl = System.Windows.Controls.UserControl;
 
 namespace VSRemoteDebugger.Windows
 {
@@ -15,20 +18,22 @@ namespace VSRemoteDebugger.Windows
         public ToolWindow1Control()
         {
             this.InitializeComponent();
-            this.txtHostname.IsEnabled = false;
-            this.txtDotnetLocation.IsEnabled = false;
-            this.txtGroupName.IsEnabled = false;
-            this.txtOutputDirectory.IsEnabled = false;
-            this.txtUsername.IsEnabled = false;
-            this.txtVsdbgLocation.IsEnabled = false;
-            this.chkDontDebug.IsEnabled = false;
-            this.chkPublish.IsEnabled = false;
-            this.chkUseCommandLineFromProject.IsEnabled = false;
-            this.cmbProfile.IsEnabled = false;
-            this.btnDelete.IsEnabled = false;
-            this.btnRename.IsEnabled = false;
 
-            cmbProfile.ItemsSource = ConfigFile.data;
+            //cmbProfile.ItemsSource = ConfigFile.Data.data.Keys;
+            //cmbProfile.SelectedItem = ConfigFile.Data.CurrentlySelected;
+
+            if(cmbProfile.Items.Count > 0)
+            {
+                Enable(true);
+            } else
+            {
+                Enable(false);
+            }
+
+            this.txtHostname.Text = ConfigFile.Current.Hostname;
+            loadCurrent();
+            this.cmbProfile.SelectionChanged -= cmbProfile_SelectionChanged;
+            this.cmbProfile.SelectionChanged += cmbProfile_SelectionChanged;
         }
 
         public void Enable(bool activate)
@@ -54,11 +59,19 @@ namespace VSRemoteDebugger.Windows
         /// <param name="e">The event args.</param>
         [SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions", Justification = "Sample code")]
         [SuppressMessage("StyleCop.CSharp.NamingRules", "SA1300:ElementMustBeginWithUpperCaseLetter", Justification = "Default event handler naming pattern")]
-        private void button1_Click(object sender, RoutedEventArgs e)
+        private void btnSave_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(
-                string.Format(System.Globalization.CultureInfo.CurrentUICulture, "Invoked '{0}'", this.ToString()),
-                "ToolWindow1");
+            ConfigFile.Current.DotnetLocation = txtDotnetLocation.Text;
+            ConfigFile.Current.GroupName = txtGroupName.Text;
+            ConfigFile.Current.Hostname = txtHostname.Text;
+            ConfigFile.Current.OutputDirectory = txtOutputDirectory.Text;
+            ConfigFile.Current.Username = txtUsername.Text;
+            ConfigFile.Current.VsdbgLocation = txtVsdbgLocation.Text;
+//            ConfigFile.Data.data[ConfigFile.Data.CurrentlySelected].DontDebug = chkDontDebug.IsChecked;
+            ConfigFile.Current.Publish = chkPublish.IsChecked;
+            ConfigFile.Current.DontDebug = chkDontDebug.IsChecked;
+            ConfigFile.Current.UseCommandLineFromProject = chkUseCommandLineFromProject.IsChecked;
+            ConfigFile.Save();
         }
 
         private void btnNew_Click(object sender, RoutedEventArgs e)
@@ -72,8 +85,34 @@ namespace VSRemoteDebugger.Windows
 
             Enable(true);
 
-            ConfigFile.data.Add(name, new ConfigFile.ConfigFileDataRow());
+
+            ConfigFile.Data.data.Add(name, new ConfigFileDataRow());
+            ConfigFile.Data.CurrentlySelected = name;
             ConfigFile.Save();
+
+
         }
+
+        private void loadCurrent()
+        {
+            txtDotnetLocation.Text = ConfigFile.Current.DotnetLocation;
+            txtGroupName.Text = ConfigFile.Current.GroupName;
+            txtHostname.Text = ConfigFile.Current.Hostname;
+            txtOutputDirectory.Text = ConfigFile.Current.OutputDirectory;
+            txtUsername.Text = ConfigFile.Current.Username;
+            txtVsdbgLocation.Text = ConfigFile.Current.VsdbgLocation;
+            chkPublish.IsChecked = ConfigFile.Current.Publish;
+            chkDontDebug.IsChecked = ConfigFile.Current.DontDebug;
+            chkUseCommandLineFromProject.IsChecked = ConfigFile.Current.UseCommandLineFromProject;
+        }
+
+        private void cmbProfile_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ConfigFile.Data.CurrentlySelected = (string)e.AddedItems[0];
+
+            loadCurrent();
+        }
+
+
     }
 }

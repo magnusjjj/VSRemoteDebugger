@@ -8,43 +8,50 @@
              Foreground="{DynamicResource {x:Static vsshell:VsBrushes.WindowTextKey}}"
              mc:Ignorable="d"
              d:DesignHeight="380" d:DesignWidth="300"
+             xmlns:c="clr-namespace:VSRemoteDebugger"
              Name="MyToolWindow">
     <Grid>
         <StackPanel Orientation="Vertical">
-
+            <StackPanel.DataContext>
+                <Binding Source="{x:Static c:ConfigFile.Current}"/>
+            </StackPanel.DataContext>
             <TextBlock Margin="10" HorizontalAlignment="Center">VSRemoteDebugger profiles</TextBlock>
-            
             <Grid>
+                <Grid.DataContext>
+                    <Binding Source="{x:Static c:ConfigFile.Data}"/>
+                </Grid.DataContext>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"></ColumnDefinition>
                     <ColumnDefinition Width="auto" MinWidth="40"></ColumnDefinition>
                     <ColumnDefinition Width="auto" MinWidth="40"></ColumnDefinition>
                     <ColumnDefinition Width="auto" MinWidth="40"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
-                <ComboBox Grid.Row="0" Grid.Column="0" Name="cmbProfile"></ComboBox>
+                <ComboBox Grid.Row="0" Grid.Column="0" Name="cmbProfile" ItemsSource="{Binding Source={x:Static c:ConfigFile.Data}, Path=data.Keys}" SelectedItem="{Binding Source={x:Static c:ConfigFile.Data}, Path=CurrentlySelected}"></ComboBox>
                 <Button Content="New" Grid.Row="0" Grid.Column="1" Name="btnNew" Click="btnNew_Click"></Button>
                 <Button Content="Rename" Grid.Row="0" Grid.Column="2" Name="btnRename"></Button>
                 <Button Content="Delete" Grid.Row="0" Grid.Column="3" Name="btnDelete"></Button>
+                
             </Grid>
+            <StackPanel Orientation="Vertical" Name="InputList">
+                <CheckBox Content="Don't debug" Margin="5" Name="chkDontDebug"></CheckBox>
+                <CheckBox Content="Publish" Margin="5" Name="chkPublish"></CheckBox>
+                <CheckBox Content="Use command line arguments from project" Margin="5" Name="chkUseCommandLineFromProject"></CheckBox>
 
-            <CheckBox Content="Don't debug" Margin="5" Name="chkDontDebug"></CheckBox>
-            <CheckBox Content="Publish" Margin="5" Name="chkPublish"></CheckBox>
-            <CheckBox Content="Use command line arguments from project" Margin="5" Name="chkUseCommandLineFromProject"></CheckBox>
-
-            <TextBox Text="hostname" Margin="5" Name="txtHostname"></TextBox>
-            <TextBox Text="username" Margin="5" Name="txtUsername"></TextBox>
-            <TextBox Text="group name" Margin="5" Name="txtGroupName"></TextBox>
-            <TextBox Text="~/.vsdbg/vsdbg" Margin="5" Name="txtVsdbgLocation"></TextBox>
-            <TextBox Text="~/.dotnet/dotnet" Margin="5" Name="txtDotnetLocation"></TextBox>
-            <TextBox Text="/home/example/project" Margin="5" Name="txtOutputDirectory"></TextBox>
-            <Grid Margin="20">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"></ColumnDefinition>
-                    <ColumnDefinition Width="*" MinWidth="40"></ColumnDefinition>
-                </Grid.ColumnDefinitions>
-                <Button Content="Save" Click="button1_Click" Width="120" Height="30" Name="Save" Grid.Column="0"/>
-                <Button Content="Cancel" Click="button1_Click" Width="120" Height="30" Name="Cancel" Grid.Column="2"/>
-            </Grid>
+                <TextBox Margin="5" Name="txtHostname"></TextBox>
+                <TextBox Margin="5" Name="txtUsername"></TextBox>
+                <TextBox Margin="5" Name="txtGroupName"></TextBox>
+                <TextBox Margin="5" Name="txtVsdbgLocation"></TextBox>
+                <TextBox Margin="5" Name="txtDotnetLocation"></TextBox>
+                <TextBox Margin="5" Name="txtOutputDirectory"></TextBox>
+                <Grid Margin="20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"></ColumnDefinition>
+                        <ColumnDefinition Width="*" MinWidth="40"></ColumnDefinition>
+                    </Grid.ColumnDefinitions>
+                    <Button Content="Save" Click="btnSave_Click" Width="120" Height="30" Name="Save" Grid.Column="0"/>
+                    <Button Content="Cancel" Click="btnSave_Click" Width="120" Height="30" Name="Cancel" Grid.Column="2"/>
+                </Grid>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </UserControl>

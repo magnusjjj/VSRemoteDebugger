@@ -32,7 +32,7 @@ namespace VSRemoteDebugger
     [ProvideMenuResource("Menus.ctmenu", 1)]
     [ProvideOptionPage(typeof(RemoteOptionsPage), "VSRemoteDebugger", "Remote Machine Settings", 0, 0, true)]
     [ProvideOptionPage(typeof(LocalOptionsPage), "VSRemoteDebugger", "Local Machine Settings", 0, 0, true)]
-    [ProvideToolWindow(typeof(VSRemoteDebugger.Windows.SettingsToolWindow))]
+    [ProvideToolWindow(typeof(VSRemoteDebugger.Windows.SettingsToolWindow), DocumentLikeTool = true)]
     public sealed class VSRemoteDebuggerPackage : AsyncPackage
     {
         private RemoteOptionsPage RemotePage => (RemoteOptionsPage)GetDialogPage(typeof(RemoteOptionsPage));
