@@ -4,8 +4,6 @@ using System.Threading;
 using System.Windows.Forms;
 using Microsoft.VisualStudio.Shell;
 using Microsoft.VisualStudio.Shell.Interop;
-using VSRemoteDebugger.OptionsPage;
-using VSRemoteDebugger.OptionsPages;
 using Task = System.Threading.Tasks.Task;
 
 namespace VSRemoteDebugger
@@ -30,25 +28,20 @@ namespace VSRemoteDebugger
     [PackageRegistration(UseManagedResourcesOnly = true, AllowsBackgroundLoading = true)]
     [Guid(PackageGuidString)]
     [ProvideMenuResource("Menus.ctmenu", 1)]
-    [ProvideOptionPage(typeof(RemoteOptionsPage), "VSRemoteDebugger", "Remote Machine Settings", 0, 0, true)]
-    [ProvideOptionPage(typeof(LocalOptionsPage), "VSRemoteDebugger", "Local Machine Settings", 0, 0, true)]
     [ProvideToolWindow(typeof(VSRemoteDebugger.Windows.SettingsToolWindow), DocumentLikeTool = true)]
     public sealed class VSRemoteDebuggerPackage : AsyncPackage
-    {
-        private RemoteOptionsPage RemotePage => (RemoteOptionsPage)GetDialogPage(typeof(RemoteOptionsPage));
-        private LocalOptionsPage LocalPage => (LocalOptionsPage)GetDialogPage(typeof(LocalOptionsPage));
-
-        public string IP => RemotePage.IP;
-        public string UserName => RemotePage.UserName;
-        public string GroupName => RemotePage.GroupName;
-        public string VsDbgPath => RemotePage.VsDbgPath;
-        public string DotnetPath => RemotePage.DotnetPath;
-        public string AppFolderPath => RemotePage.AppFolderPath;
+    { 
+        public string IP => ConfigFile.Current.Hostname;
+        public string UserName => ConfigFile.Current.Username;// RemotePage.UserName;
+        public string GroupName => ConfigFile.Current.GroupName; // RemotePage.GroupName;
+        public string VsDbgPath => ConfigFile.Current.VsdbgLocation; //RemotePage.VsDbgPath;
+        public string DotnetPath => ConfigFile.Current.DotnetLocation;// RemotePage.DotnetPath;
+        public string AppFolderPath => ConfigFile.Current.OutputDirectory; // RemotePage.AppFolderPath;
         public string DebugFolderPath => AppFolderPath + "/debug";
         public string ReleaseFolderPath => AppFolderPath + "/release";
-        public bool Publish => LocalPage.Publish;
-        public bool UseCommandLineArgs => LocalPage.UseCommandLineArgs;
-        public bool NoDebug => LocalPage.NoDebug;
+        public bool Publish => ConfigFile.Current.Publish; // LocalPage.Publish;
+        public bool UseCommandLineArgs => ConfigFile.Current.UseCommandLineFromProject; // LocalPage.UseCommandLineArgs;
+        public bool NoDebug => ConfigFile.Current.DontDebug; // LocalPage.NoDebug;
 
         /// <summary>
         /// VSRemoteDebuggerPackage GUID string.

@@ -23,9 +23,9 @@ namespace VSRemoteDebugger
         public string OutputDirectory { get; set; } = "~/project";
         public string Username { get; set; } = "username";
         public string VsdbgLocation { get; set; } = "~/.vsdbg/vsdbg";
-        public bool? DontDebug { get; set; } = false;
-        public bool? Publish { get; set; } = false;
-        public bool? UseCommandLineFromProject { get; set; } = false;
+        public bool DontDebug { get; set; } = false;
+        public bool Publish { get; set; } = false;
+        public bool UseCommandLineFromProject { get; set; } = false;
     }
 
     public static class ConfigFile

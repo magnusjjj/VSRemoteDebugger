@@ -31,6 +31,16 @@
 				  <CommandName>VSRemoteDebugger Toolbar</CommandName>
 			  </Strings>
 		  </Menu>
+		 <Menu guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarProfileMenuController" priority="0x0100" type="MenuController">
+			 <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarGroup" />
+			 <CommandFlag>IconAndText</CommandFlag>
+			 <CommandFlag>TextChanges</CommandFlag>
+			 <CommandFlag>TextIsAnchorCommand</CommandFlag>
+			 <Strings>
+				 <ButtonText>Test Menu Controller</ButtonText>
+				 <CommandName>Test Menu Controller</CommandName>
+			 </Strings>
+		 </Menu>
 	  </Menus>
 	  
     <!-- Inside this section we have different sub-sections: one for the menus, another
@@ -51,6 +61,9 @@
       </Group>
       <Group guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarGroup" priority="0x0000">
         <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="Toolbar" />
+	  </Group>
+	  <Group guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarProfileMenuControllerGroup" priority="0x000">
+		  <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarProfileMenuController" />
 	  </Group>
     </Groups>
 
@@ -79,13 +92,31 @@
 			  <ButtonText>Invoke ToolbarTestCommand</ButtonText>
 			</Strings>
 		  </Button>
-      <Button guid="guidVSRemoteDebuggerPackageCmdSet" id="cmdidToolWindow1Command" priority="0x0100" type="Button">
-        <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarGroup" />
-        <Icon guid="guidImages1" id="bmpPic1" />
-        <Strings>
-          <ButtonText>ToolWindow1</ButtonText>
-        </Strings>
-      </Button>
+          <Button guid="guidVSRemoteDebuggerPackageCmdSet" id="cmdidToolWindow1Command" priority="0x0100" type="Button">
+            <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarGroup" />
+            <Icon guid="guidImages1" id="bmpPic1" />
+            <Strings>
+              <ButtonText>ToolWindow1</ButtonText>
+            </Strings>
+          </Button>
+		  <Button guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarProfileMenuControllerGroupCmd1" priority="0x0000" type="Button">
+			  <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarProfileMenuControllerGroup" />
+			  <Icon guid="guidImages" id="bmpPic1" />
+			  <CommandFlag>IconAndText</CommandFlag>
+			  <Strings>
+				  <ButtonText>MC Item 1</ButtonText>
+				  <CommandName>MC Item 1</CommandName>
+			  </Strings>
+		  </Button>
+  		  <Button guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarProfileMenuControllerGroupCmd2" priority="0x0000" type="Button">
+	  		  <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarProfileMenuControllerGroup" />
+			  <Icon guid="guidImages" id="bmpPic1" />
+			  <CommandFlag>IconAndText</CommandFlag>
+			  <Strings>
+				  <ButtonText>MC Item 2</ButtonText>
+				  <CommandName>MC Item 2</CommandName>
+			  </Strings>
+		  </Button>
     </Buttons>
 
     <!--The bitmaps section is used to define the bitmaps that are used for the commands.-->
@@ -110,7 +141,11 @@
       <IDSymbol name="RemoteDebugId" value="0x0100" />
       <IDSymbol name="Toolbar" value="0x1000" />
       <IDSymbol name="ToolbarGroup" value="0x1050" />
-      <IDSymbol value="4177" name="cmdidToolWindow1Command" />
+      <IDSymbol name="cmdidToolWindow1Command" value="0x1051" />
+	  <IDSymbol name="ToolbarProfileMenuController" value="0x1052"/>
+	  <IDSymbol name="ToolbarProfileMenuControllerGroup" value="0x1053"/>
+	  <IDSymbol name="ToolbarProfileMenuControllerGroupCmd1" value="0x1054" />
+      <IDSymbol name="ToolbarProfileMenuControllerGroupCmd2" value="0x1055" />
     </GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{cc9d8487-6404-47f7-a526-f95f682defc0}">

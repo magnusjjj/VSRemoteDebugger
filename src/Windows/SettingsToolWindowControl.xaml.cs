@@ -68,9 +68,9 @@ namespace VSRemoteDebugger.Windows
             ConfigFile.Current.Username = txtUsername.Text;
             ConfigFile.Current.VsdbgLocation = txtVsdbgLocation.Text;
 //            ConfigFile.Data.data[ConfigFile.Data.CurrentlySelected].DontDebug = chkDontDebug.IsChecked;
-            ConfigFile.Current.Publish = chkPublish.IsChecked;
-            ConfigFile.Current.DontDebug = chkDontDebug.IsChecked;
-            ConfigFile.Current.UseCommandLineFromProject = chkUseCommandLineFromProject.IsChecked;
+            ConfigFile.Current.Publish = (bool)chkPublish.IsChecked;
+            ConfigFile.Current.DontDebug = (bool)chkDontDebug.IsChecked;
+            ConfigFile.Current.UseCommandLineFromProject = (bool)chkUseCommandLineFromProject.IsChecked;
             ConfigFile.Save();
         }
 

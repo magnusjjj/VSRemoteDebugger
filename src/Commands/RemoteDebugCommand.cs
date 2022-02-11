@@ -58,6 +58,27 @@ namespace VSRemoteDebugger
 			commandService.AddCommand(menuItem);
 		}
 
+		public static async void CreateOutput(AsyncPackage package)
+        {
+			string title = "Hoiii";
+			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
+
+			DTE2 dte = (DTE2)await ServiceProvider.GetGlobalServiceAsync(typeof(DTE));//(DTE2)GetService(typeof(DTE));
+			OutputWindowPanes panes =
+				dte.ToolWindows.OutputWindow.OutputWindowPanes;
+
+			try
+			{
+				// If the pane exists already, write to it.
+				panes.Item(title);
+			}
+			catch (ArgumentException)
+			{
+				// Create a new pane and write to it.
+				panes.Add(title);
+			}
+		}
+
 		/// <summary>
 		/// Initializes the singleton instance of the command.
 		/// </summary>
@@ -67,6 +88,25 @@ namespace VSRemoteDebugger
 			// Switch to the main thread - the call to AddCommand in RemoteDebug's constructor requires the UI thread.
 			await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
 			var commandService = await package.GetServiceAsync(typeof(IMenuCommandService)).ConfigureAwait(false) as OleMenuCommandService;
+
+			DTE2 dte = await ServiceProvider.GetGlobalServiceAsync(typeof(DTE)).ConfigureAwait(false) as DTE2;//(DTE2)GetService(typeof(DTE));
+			OutputWindowPanes panes =
+				dte.ToolWindows.OutputWindow.OutputWindowPanes;
+
+
+			string title = "Braaap";
+
+			try
+			{
+				// If the pane exists already, write to it.
+				panes.Item(title);
+			}
+			catch (ArgumentException)
+			{
+				// Create a new pane and write to it.
+				panes.Add(title);
+			}
+
 			Instance = new RemoteDebugCommand(package, commandService);
 		}
 
