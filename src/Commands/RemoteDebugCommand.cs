@@ -12,6 +12,8 @@ using Process = System.Diagnostics.Process;
 using System.Diagnostics;
 using Newtonsoft.Json.Linq;
 using System.Linq;
+using System.Runtime.InteropServices;
+using Microsoft.VisualStudio;
 
 namespace VSRemoteDebugger
 {
@@ -108,7 +110,115 @@ namespace VSRemoteDebugger
 			}
 
 			Instance = new RemoteDebugCommand(package, commandService);
+
+			CommandID menuMyDropDownComboCommandID = new CommandID(CommandSet, (int)0x1056);
+			OleMenuCommand menuMyDropDownComboCommand = new OleMenuCommand(new EventHandler(OnMenuMyDropDownCombo), menuMyDropDownComboCommandID);
+			commandService.AddCommand(menuMyDropDownComboCommand);
+
+			CommandID menuMyDropDownComboGetListCommandID = new CommandID(CommandSet, (int)0x1057);
+			MenuCommand menuMyDropDownComboGetListCommand = new OleMenuCommand(new EventHandler(OnMenuMyDropDownComboGetList), menuMyDropDownComboGetListCommandID);
+			commandService.AddCommand(menuMyDropDownComboGetListCommand);
 		}
+
+		static string currentDropDownComboChoice = "Hello";
+
+		private static void OnMenuMyDropDownCombo(object sender, EventArgs e)
+		{
+			OleMenuCmdEventArgs eventArgs = e as OleMenuCmdEventArgs;
+
+			if (eventArgs != null)
+			{
+				string newChoice = eventArgs.InValue as string;
+				IntPtr vOut = eventArgs.OutValue;
+
+				if (vOut != IntPtr.Zero)
+				{
+					// when vOut is non-NULL, the IDE is requesting the current value for the combo
+					Marshal.GetNativeVariantForObject(currentDropDownComboChoice, vOut);
+				}
+
+				else if (newChoice != null)
+				{
+					// new value was selected or typed in
+					// see if it is one of our items
+					bool validInput = false;
+					int indexInput = -1;
+					for (indexInput = 0; indexInput < dropDownList.Length; indexInput++)
+					{
+						if (string.Compare(dropDownList[indexInput], newChoice, StringComparison.CurrentCultureIgnoreCase) == 0)
+						{
+							validInput = true;
+							break;
+						}
+					}
+
+					if (validInput)
+					{
+						currentDropDownComboChoice = dropDownList[indexInput];
+						ShowMessage("Current value: ", currentDropDownComboChoice);
+					}
+					else
+					{
+						throw (new ArgumentException("Current choice for the profile dropdown list is invalid")); // force an exception to be thrown
+					}
+				}
+			}
+			else
+			{
+				// We should never get here; EventArgs are required.
+				throw (new ArgumentException("Something went wrong, eventargs is null")); // force an exception to be thrown
+			}
+		}
+
+		static string[] dropDownList = { "Hello" };
+
+		private static void OnMenuMyDropDownComboGetList(object sender, EventArgs e)
+		{
+			OleMenuCmdEventArgs eventArgs = e as OleMenuCmdEventArgs;
+
+			if (eventArgs != null)
+			{
+				object inParam = eventArgs.InValue;
+				IntPtr vOut = eventArgs.OutValue;
+
+				if (inParam != null)
+				{
+					throw (new ArgumentException("Something went wrong, inParam is null")); // force an exception to be thrown
+				}
+				else if (vOut != IntPtr.Zero)
+				{
+					Marshal.GetNativeVariantForObject(dropDownList, vOut);
+				}
+				else
+				{
+					throw (new ArgumentException("Something went wrong, vOut is null")); // force an exception to be thrown
+				}
+			}
+
+		}
+
+		// Helper method to show a message box using the SVsUiShell/IVsUiShell service
+		public static void ShowMessage(string title, string message)
+		{
+			
+			Microsoft.VisualStudio.Shell.ThreadHelper.ThrowIfNotOnUIThread();
+			IVsUIShell uiShell = (IVsUIShell)Package.GetGlobalService(typeof(SVsUIShell));
+			Guid clsid = Guid.Empty;
+			int result = VSConstants.S_OK;
+			int hr = uiShell.ShowMessageBox(0,
+								ref clsid,
+								title,
+								message,
+								null,
+								0,
+								OLEMSGBUTTON.OLEMSGBUTTON_OK,
+								OLEMSGDEFBUTTON.OLEMSGDEFBUTTON_FIRST,
+								OLEMSGICON.OLEMSGICON_INFO,
+								0,        // false = application modal; true would make it system modal
+								out result);
+			ErrorHandler.ThrowOnFailure(hr);
+		}
+
 
 		/// <summary>
 		/// Gets the instance of the command.

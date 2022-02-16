@@ -42,7 +42,22 @@
 			 </Strings>
 		 </Menu>
 	  </Menus>
-	  
+
+	  <Combos>
+		  <Combo guid="guidVSRemoteDebuggerPackageCmdSet" id="profileChooserDropdown" priority="0x000" type="DropDownCombo" defaultWidth="70" idCommandList="cmdidProfileChooserDropdownGetList">
+			  <Parent guid="guidVSRemoteDebuggerPackageCmdSet" id="ToolbarGroup" />
+			  <CommandFlag>IconAndText</CommandFlag>
+			  <CommandFlag>CommandWellOnly</CommandFlag>
+			  <Strings>
+				  <MenuText>DropDown Combo: </MenuText>
+				  <ButtonText>DropDown: </ButtonText>
+				  <ToolTipText>Select String</ToolTipText>
+				  <CanonicalName>DropDown Combo</CanonicalName>
+				  <LocCanonicalName>DropDown Combo</LocCanonicalName>
+				  <CommandName>DropDown Combo</CommandName>
+			  </Strings>
+		  </Combo>
+	  </Combos>
     <!-- Inside this section we have different sub-sections: one for the menus, another
     for the menu groups, one for the buttons (the actual commands), one for the combos
     and the last one for the bitmaps used. Each element is identified by a command id that
@@ -146,7 +161,9 @@
 	  <IDSymbol name="ToolbarProfileMenuControllerGroup" value="0x1053"/>
 	  <IDSymbol name="ToolbarProfileMenuControllerGroupCmd1" value="0x1054" />
       <IDSymbol name="ToolbarProfileMenuControllerGroupCmd2" value="0x1055" />
-    </GuidSymbol>
+      <IDSymbol name="profileChooserDropdown" value="0x1056" />
+	  <IDSymbol name="cmdidProfileChooserDropdownGetList" value="0x1057" />
+	</GuidSymbol>
 
     <GuidSymbol name="guidImages" value="{cc9d8487-6404-47f7-a526-f95f682defc0}">
       <IDSymbol name="bmpPic1" value="1" />
